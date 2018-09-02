@@ -1,6 +1,8 @@
-CC       = cc
-PY       = python2
-NASM     = nasm
+#CC       = cc
+PY       = python
+#PY       = python2.6
+#NASM     = nasm
+#NASM = /export/home/WHR/src/Intel_AESNI_Sample_Library_v1.2/yasm/yasm-0.8.0/yasm
 QEMU     = qemu-system-i386
 
 CCFLAGS  = 
@@ -38,7 +40,7 @@ $(BUILDDIR)/compress: Source/Compressor/compress.c
 	$(CC) Source/Compressor/compress.c -o $@ $(CCFLAGS)
 
 $(BUILDDIR)/stage2.bin: $(STAGE2ASM) $(BUILDDIR)/song.bin $(BUILDDIR)/frames.bin $(BUILDDIR)/special.bin
-	cd Source/Stage2 && $(NASM) main.asm -o ../../$@ $(ASFLAGS)
+	cd Source/Stage2 && $(NASM) -I . main.asm -o ../../$@ $(ASFLAGS)
 	
 $(BUILDDIR)/stage2-compressed.bin: $(BUILDDIR)/stage2.bin $(BUILDDIR)/compress
 	$(BUILDDIR)/compress $(BUILDDIR)/stage2.bin $@
