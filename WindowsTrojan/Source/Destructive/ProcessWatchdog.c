@@ -43,10 +43,10 @@ DWORD WINAPI watchdogThread(LPVOID parameter) {
 			QueryFullProcessImageNameA(hProc, 0, fn2, 512);
 #endif
 #else
-			GetModuleFileNameExA(hProc, NULL, fn2, 512);
+			DWORD len = GetModuleFileNameExA(hProc, NULL, fn2, 512);
 #endif
 
-			if (!lstrcmpA(fn, fn2)) {
+			if (len && lstrcmpA(fn, fn2) == 0) {
 				nproc++;
 			}
 
