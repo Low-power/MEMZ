@@ -1,9 +1,8 @@
 #CC       = cc
-PY       = python
-#PY       = python2.6
-#NASM     = nasm
-#NASM = /export/home/WHR/src/Intel_AESNI_Sample_Library_v1.2/yasm/yasm-0.8.0/yasm
-QEMU     = qemu-system-i386
+PY       ?= python
+#PY       ?= python2.6
+NASM     ?= nasm
+QEMU     ?= qemu-system-i386
 
 CCFLAGS  = 
 ASFLAGS  = 

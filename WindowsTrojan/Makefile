@@ -1,5 +1,7 @@
+ifeq ($(CC),cc)
 CC = i586-mingw32msvc-gcc
-PYTHON = python
+endif
+PYTHON ?= python
 
 CCFLAGS = -nostdlib -nodefaultlibs -std=c99 -Wl,-e,_start,--subsystem,windows -s -m32 -D _UNICODE -D UNICODE -Os -march=i486
 LIBS    = -luser32 -lkernel32 -lgdi32 -lwinmm -lcomctl32 -ladvapi32 -lshell32 -lpsapi
