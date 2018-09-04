@@ -16,6 +16,6 @@ Even if you have all of this I don't think you get this to compile because my sc
  
 If you want to use the exe to batch converter, don't forget to append -zip to it's command line, because this gives way smaller file sizes and also works on Windows XP.
 
-You'll also need Visual Studio 2015 to build the actual Trojan. Make sure you selected the Release configuration, because Debug is not configured properly.
+You'll also need MinGW-w64 to build the actual Trojan.
 
 The ASM code may look very noobish, but this is my first big thing written in assembly.
